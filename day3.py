@@ -16,9 +16,14 @@ answer1 = gamma_decimal * epsilon_decimal
 
 # section 2
 
-mask = np.ones(len(data), dtype=bool)
+mask_o2 = np.ones(len(data), dtype=bool)
+mask_co2 = np.ones(len(data), dtype=bool)
 for i in range(data.shape[1]):
-    mask = mask * (data[:, i] == (np.sum(data[mask, i])/len(data[mask]) >= 0.5))
+    mask_o2 *= (data[:, i] == (np.sum(data[mask_o2, i]) / len(data[mask_o2]) >= 0.5))
+    if ~np.isin(np.sum(data[mask_co2, i]) / len(data[mask_co2]), (0, 1)):
+        mask_co2 *= (data[:, i] != (np.sum(data[mask_co2, i]) / len(data[mask_co2]) >= 0.5))
 
+o2_decimal = int("".join(data[mask_o2].astype(int).astype(str)[0]), 2)
+co2_decimal = int("".join(data[mask_co2].astype(int).astype(str)[0]), 2)
 
-answer2 = 1
+answer2 = o2_decimal * co2_decimal
